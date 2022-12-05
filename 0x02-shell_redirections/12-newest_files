@@ -1,0 +1,2 @@
+#!/bbin/bach
+ls -ti | head -n 10
