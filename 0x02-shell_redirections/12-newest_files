@@ -1,2 +1,2 @@
-#!/bbin/bach
+#!/bin/bash
 ls -t | head
