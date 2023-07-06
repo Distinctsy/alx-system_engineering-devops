@@ -1,27 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Bash script that will display information about subdomains.
+function domain_check {
+	domain_names=("www" "lb-01" "web-01" "web-02")
 
-get_record_info() {
-    local domain="$1"
-    local subdomain="$2"
-
-    local record_type=$(nslookup "$subdomain.$domain" | awk '/^Name:/{getline; print $2}')
-    local destination=$(nslookup "$subdomain.$domain" | awk '/^Address:/{print $2}')
-
-    echo "The subdomain $subdomain is a $record_type record and points to $destination"
+	for i in "${domain_names[@]}";
+	do
+		dig "${i}"."$1" | grep -A1 'ANSWER SECTION:' | \
+		awk 'FNR == 2 {printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$i"
+	done
 }
 
-main() {
-    local domain="$1"
-    local subdomain="$2"
-
-    if [[ -z "$subdomain" ]]; then
-        get_record_info "$domain" "www"
-        get_record_info "$domain" "lb-01"
-        get_record_info "$domain" "web-01"
-        get_record_info "$domain" "web-02"
-    else
-        get_record_info "$domain" "$subdomain"
-    fi
+function subdomain_check {
+	dig "${2}"."$1" | grep -A1 'ANSWER SECTION:' | \
+	awk 'FNR == 2 {printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$2"
 }
 
-main "$@"
+if [ $# -lt 1 ]
+then
+	echo "*** Provide domain name ***"
+elif [ $# -eq 1 ]
+then
+	domain_check "$1";
+else
+	subdomain_check "$1" "$2";
+fi
