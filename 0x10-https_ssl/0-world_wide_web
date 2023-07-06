@@ -24,5 +24,3 @@ main() {
         get_record_info "$domain" "$subdomain"
     fi
 }
-
-main "$@"
