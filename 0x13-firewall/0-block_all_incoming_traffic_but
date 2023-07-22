@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#requirements below must be applied to web-01 (feel free to do it on lb-01 and web-02, but it won’t be checked)
+#Configure ufw so that it blocks all incoming traffic, except the following TCP ports: 22 (SSH)
+ufw default allow outgoing
+ufw default deny incoming
+# (HTTPS SSL)
+sed -i 's/IPV6=.*/IPV6=yes/' /etc/default/ufw
+ufw disable
+ufw enable
+#80 (HTTP)
+ufw allow 443/tcp
+ufw allow 80/tcp
+ufw allow 22/tcp
+#install the ufw firewall and setup a few rules on web-01.
+apt-get install ufw
