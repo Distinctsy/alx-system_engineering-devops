@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# This is a script that displayes listening sockets with the PID and the mam eof the program to which each sockets belongs to 
+
+netstat -lp
